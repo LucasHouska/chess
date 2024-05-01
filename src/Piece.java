@@ -1,4 +1,4 @@
-public class Piece {
+public abstract class Piece {
     protected Position position;
     protected PieceColor color;
 
@@ -19,5 +19,5 @@ public class Piece {
         this.position = position;
     }
 
-    public abstract boolean canMoveTo(Position newPosition, Piece[][] board);
+    public abstract boolean isValidMove(Position newPosition, Piece[][] board);
 }
