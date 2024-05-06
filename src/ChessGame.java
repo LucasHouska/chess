@@ -6,6 +6,19 @@ public class ChessGame {
         board = new ChessBoard();
     }
 
+    public ChessBoard getBoard() {
+        return this.board;
+    }
+
+    public void resetGame() {
+        board = new ChessBoard();
+        whiteTurn = true;
+    }
+
+    public PieceColor getCurrentPlayerColor() {
+        return whiteTurn ? PieceColor.WHITE : PieceColor.BLACK;
+    }
+
     public boolean makeMove(Position start, Position end) {
         Piece movingPiece = board.getPiece(start.getRow(), start.getColumn());
         if (movingPiece == null || movingPiece.getColor() != (whiteTurn ? PieceColor.WHITE : PieceColor.BLACK)) {
@@ -93,5 +106,29 @@ public class ChessGame {
 
         return inCheck;
 
+    }
+
+    private Position selectedPosition;
+
+    public boolean isPieceSelected() {
+        return selectedPosition != null;
+    }
+
+    public boolean handleSquareSelection(int row, int col) {
+        if (selectedPosition == null) {
+            // Attempt to select a piece
+            Piece selectedPiece = board.getPiece(row, col);
+            if (selectedPiece != null
+                    && selectedPiece.getColor() == (whiteTurn ? PieceColor.WHITE : PieceColor.BLACK)) {
+                selectedPosition = new Position(row, col);
+                return false; // Indicate a piece was selected but not moved
+            }
+        } else {
+            // Attempt to move the selected piece
+            boolean moveMade = makeMove(selectedPosition, new Position(row, col));
+            selectedPosition = null; // Reset selection regardless of move success
+            return moveMade; // Return true if a move was successfully made
+        }
+        return false; // Return false if no piece was selected or move was not made
     }
 }
